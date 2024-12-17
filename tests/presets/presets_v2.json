@@ -1,0 +1,49 @@
+{
+  "version": 2,
+  "variables": {
+    "variable_1": "22r3",
+    "variable_2": 43
+  },
+  "includes": [
+    "cfg-variables.json"
+  ],
+  "presets": [
+    {
+      "name": "cfg-grid",
+      "hidden": true,
+      "arguments": {
+        "grid": "grid-value"
+      }
+    },
+    {
+      "name": "cfg-common",
+      "hidden": true,
+      "arguments": {
+        "initdb": ""
+      }
+    },
+    {
+      "name": "db-option1",
+      "hidden": true,
+      "inherits": [
+        "cfg-common",
+        "cfg-grid"
+      ],
+      "arguments": {
+        "default_db": true
+      }
+    },
+    {
+      "name": "db-option2",
+      "description": "here database configuration ${variable_1} ${grid}",
+      "inherits": [
+        "cfg-common",
+        "cfg-grid"
+      ],
+      "arguments": {
+        "db": "${grid}_${variable_1}",
+        "dr": "${variable_2}.00.00"
+      }
+    }
+  ]
+}

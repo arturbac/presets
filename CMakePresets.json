@@ -1,0 +1,429 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "cfg-c++23",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "23",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF"
+      }
+    },
+    {
+      "name": "cfg-c++26",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "26",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF"
+      }
+    },
+    {
+      "name": "cfg-clang",
+      "generator": "Ninja",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++",
+        "SIMPLE_ENUM_OPT_IN_STATIC_ASSERTS": "ON"
+      }
+    },
+    {
+      "name": "cfg-gcc",
+      "generator": "Ninja",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "cfg-libc++",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-stdlib=libc++"
+      }
+    },
+    {
+      "name": "cfg-release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "cfg-build-dir",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}"
+    },
+    {
+      "name": "msvc-debug",
+      "description": "Configure for clang debug build",
+      "inherits": [
+        "cfg-c++23"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "clang-debug",
+      "description": "Configure for clang debug build",
+      "inherits": [
+        "cfg-clang",
+        "cfg-c++23"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "clang-debug-c++26",
+      "description": "Configure for clang debug build",
+      "inherits": [
+        "cfg-clang",
+        "cfg-c++26"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "clang-debug-libstdc++",
+      "description": "Configure for clang debug build",
+      "inherits": [
+        "cfg-clang",
+        "cfg-libc++",
+        "cfg-c++23"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "clang-debug-libstdc++-c++26",
+      "description": "Configure for clang debug build",
+      "inherits": [
+        "cfg-clang",
+        "cfg-libc++",
+        "cfg-c++26"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "gcc-debug",
+      "description": "Configure for gcc debug build",
+      "inherits": [
+        "cfg-gcc",
+        "cfg-c++23"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "gcc-debug-c++26",
+      "description": "Configure for gcc debug build",
+      "inherits": [
+        "cfg-gcc",
+        "cfg-c++26"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release-time-trace",
+      "description": "Configure for release build",
+      "inherits": [
+        "cfg-clang",
+        "cfg-c++23"
+      ],
+      "binaryDir": "${sourceDir}/build/release-time-trace",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_FLAGS": "-ftime-trace -fno-omit-frame-pointer"
+      }
+    },
+    {
+      "name": "clang-release-test-asan-auto",
+      "inherits": [
+        "cfg-clang",
+        "cfg-build-dir",
+        "cfg-libc++",
+        "cfg-c++23"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_FLAGS": "-ggdb -fvisibility=default -fno-omit-frame-pointer -fsanitize=address -fsanitize-address-use-after-scope -fsanitize=undefined",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address -fsanitize=undefined"
+      }
+    },
+    {
+      "name": "ci-clang-libc++",
+      "inherits": [
+        "cfg-clang",
+        "cfg-libc++",
+        "cfg-build-dir",
+        "cfg-c++23"
+      ]
+    },
+    {
+      "name": "ci-gcc",
+      "inherits": [
+        "cfg-gcc",
+        "cfg-build-dir",
+        "cfg-c++23"
+      ]
+    },
+    {
+      "name": "ci-clang-libstdc++",
+      "inherits": [
+        "cfg-clang",
+        "cfg-build-dir",
+        "cfg-c++23"
+      ]
+    },
+    {
+      "name": "ci-clang-libstdc++-c++26",
+      "inherits": [
+        "cfg-clang",
+        "cfg-build-dir",
+        "cfg-c++26"
+      ]
+    },
+    {
+      "name": "ci-clang-libc++-c++26",
+      "inherits": [
+        "cfg-clang",
+        "cfg-libc++",
+        "cfg-build-dir",
+        "cfg-c++26"
+      ]
+    },
+    {
+      "name": "ci-gcc-c++26",
+      "inherits": [
+        "cfg-gcc",
+        "cfg-build-dir",
+        "cfg-c++26"
+      ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ci-clang-libstdc++-c++26",
+      "configurePreset": "ci-clang-libstdc++-c++26"
+    },
+    {
+      "name": "ci-clang-libc++-c++26",
+      "configurePreset": "ci-clang-libc++-c++26"
+    },
+    {
+      "name": "ci-gcc-c++26",
+      "configurePreset": "ci-gcc-c++26"
+    },
+    {
+      "name": "ci-clang-libstdc++",
+      "configurePreset": "ci-clang-libstdc++"
+    },
+    {
+      "name": "ci-clang-libc++",
+      "configurePreset": "ci-clang-libc++"
+    },
+    {
+      "name": "ci-gcc",
+      "configurePreset": "ci-gcc"
+    },
+    {
+      "name": "clang-debug",
+      "configurePreset": "clang-debug"
+    },
+    {
+      "name": "release-time-trace",
+      "configurePreset": "release-time-trace"
+    },
+    {
+      "name": "clang-release-test-asan-auto",
+      "configurePreset": "clang-release-test-asan-auto"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "ci-clang-libstdc++-c++26",
+      "configurePreset": "ci-clang-libstdc++-c++26",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-clang-libc++-c++26",
+      "configurePreset": "ci-clang-libc++-c++26",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-gcc-c++26",
+      "configurePreset": "ci-gcc-c++26",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-clang-libstdc++",
+      "configurePreset": "ci-clang-libstdc++",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-clang-libc++",
+      "configurePreset": "ci-clang-libc++",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci-gcc",
+      "configurePreset": "ci-gcc",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "clang-release-test-asan-auto",
+      "configurePreset": "clang-release-test-asan-auto",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "ci-clang-libstdc++-c++26",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ci-clang-libstdc++-c++26"
+        },
+        {
+          "type": "build",
+          "name": "ci-clang-libstdc++-c++26"
+        },
+        {
+          "type": "test",
+          "name": "ci-clang-libstdc++-c++26"
+        }
+      ]
+    },
+    {
+      "name": "ci-clang-libc++-c++26",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ci-clang-libc++-c++26"
+        },
+        {
+          "type": "build",
+          "name": "ci-clang-libc++-c++26"
+        },
+        {
+          "type": "test",
+          "name": "ci-clang-libc++-c++26"
+        }
+      ]
+    },
+    {
+      "name": "ci-gcc-c++26",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ci-gcc-c++26"
+        },
+        {
+          "type": "build",
+          "name": "ci-gcc-c++26"
+        },
+        {
+          "type": "test",
+          "name": "ci-gcc-c++26"
+        }
+      ]
+    },
+    {
+      "name": "ci-clang-libstdc++",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ci-clang-libstdc++"
+        },
+        {
+          "type": "build",
+          "name": "ci-clang-libstdc++"
+        },
+        {
+          "type": "test",
+          "name": "ci-clang-libstdc++"
+        }
+      ]
+    },
+    {
+      "name": "ci-clang-libc++",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ci-clang-libc++"
+        },
+        {
+          "type": "build",
+          "name": "ci-clang-libc++"
+        },
+        {
+          "type": "test",
+          "name": "ci-clang-libc++"
+        }
+      ]
+    },
+    {
+      "name": "ci-gcc",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ci-gcc"
+        },
+        {
+          "type": "build",
+          "name": "ci-gcc"
+        },
+        {
+          "type": "test",
+          "name": "ci-gcc"
+        }
+      ]
+    },
+    {
+      "name": "clang-release-test-asan-auto",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "clang-release-test-asan-auto"
+        },
+        {
+          "type": "build",
+          "name": "clang-release-test-asan-auto"
+        },
+        {
+          "type": "test",
+          "name": "clang-release-test-asan-auto"
+        }
+      ]
+    }
+  ]
+}

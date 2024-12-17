@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "variables": {
+    "variable_3": 67.15,
+    "variable_n": true,
+    "refering_var": "refers to variable_2=`${variable_2}`"
+  }
+}

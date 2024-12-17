@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "variables": {
+    "variable_1": "var 1"
+  },
+  "includes": [
+    "var_preset_invalid_ref.json"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "variables": {
+    "variable_2": "var 2 ${var_non_existant}"
+  }
+}

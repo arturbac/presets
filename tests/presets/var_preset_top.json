@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "variables": {
+    "variable_1": "22r3",
+    "variable_2": 43
+  },
+  "includes": [
+    "cfg-variables.json",
+    "var_preset_1.json"
+  ]
+}

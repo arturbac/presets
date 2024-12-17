@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "variables": {
+    "ref_refering_var": "ref refering_var=`${refering_var}` from prev include",
+    "variable_x": true,
+    "refering_var2_varn": "refers `${variable_2}` from top and `${variable_n}` from prev include"
+  }
+}
