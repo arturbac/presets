@@ -41,7 +41,18 @@ jobs:
       run: |
            sudo apt-get update
            sudo apt-get install -y cmake g++-14 ninja-build clang-19 libfmt-dev libc++-19-dev libc++abi-19-dev
-
+           # Setup clang-19 alternatives
+           sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 190 \
+                                  --slave /usr/bin/clang++ clang++ /usr/bin/clang++-19
+           
+           # Setup g++-14 alternatives
+           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 140 \
+                                  --slave /usr/bin/g++ g++ /usr/bin/g++-14
+           
+           # Verify the setup
+           clang++ --version
+           g++ --version
+           
     - name: ci-clang-libstdc++
       run: cmake --workflow --preset="ci-clang-libstdc++"
     - name: ci-clang-libc++
