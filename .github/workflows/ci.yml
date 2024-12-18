@@ -1,0 +1,65 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+
+jobs:
+  build-and-test-gcc:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -y cmake ninja-build gcc-14 g++-14
+
+    - name: ci-gcc
+      run: cmake --workflow --preset="ci-gcc"
+      
+    - name: ci-gcc-c++26
+      run: cmake --workflow --preset="ci-gcc-c++26"
+
+  build-and-test-clang:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Add LLVM Repository
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 19
+        
+    - name: Install dependencies
+      run: |
+           sudo apt-get update
+           sudo apt-get install -y cmake g++-14 ninja-build clang-19 libfmt-dev libc++-19-dev libc++abi-19-dev
+
+    - name: ci-clang-libstdc++
+      run: cmake --workflow --preset="ci-clang-libstdc++"
+    - name: ci-clang-libc++
+      run: cmake --workflow --preset="ci-clang-libc++"
+    - name: ci-clang-libstdc++-c++26
+      run: cmake --workflow --preset="ci-clang-libstdc++-c++26"
+    - name: ci-clang-libc++-c++26
+      run: cmake --workflow --preset="ci-clang-libc++-c++26"
+
+  build-and-test-msvc:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure MSVC
+      run: cmake -B ${{github.workspace}}/build/msvc -DCMAKE_BUILD_TYPE=Release 
+    - name: Build MSVC
+      run: cmake --build ${{github.workspace}}/build/msvc
+    - name: Test MSVC
+      working-directory: ${{github.workspace}}/build/msvc
+      run: ctest -C Debug
+
