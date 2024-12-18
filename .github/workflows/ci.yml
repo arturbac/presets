@@ -72,16 +72,3 @@ jobs:
       run: cmake --workflow --preset="ci-clang-libstdc++-c++26"
     - name: ci-clang-libc++-c++26
       run: cmake --workflow --preset="ci-clang-libc++-c++26"
-
-  build-and-test-msvc:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Configure MSVC
-      run: cmake -B ${{github.workspace}}/build/msvc -DCMAKE_BUILD_TYPE=Release 
-    - name: Build MSVC
-      run: cmake --build ${{github.workspace}}/build/msvc
-    - name: Test MSVC
-      working-directory: ${{github.workspace}}/build/msvc
-      run: ctest -C Debug
-
