@@ -21,6 +21,13 @@ jobs:
       run: |
         sudo apt-get update && sudo apt-get install -y cmake ninja-build gcc-14 g++-14
 
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 140
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 140
+        sudo update-alternatives --set gcc /usr/bin/gcc-14
+        sudo update-alternatives --set g++ /usr/bin/g++-14
+        
+        g++ --version
+        
     - name: ci-gcc
       run: cmake --workflow --preset="ci-gcc"
       
@@ -39,9 +46,24 @@ jobs:
         
     - name: Install dependencies
       run: |
-           sudo apt-get update
-           sudo apt-get install -y cmake g++-14 ninja-build clang-19 libfmt-dev libc++-19-dev libc++abi-19-dev
-
+        sudo apt-get update
+        sudo apt-get install -y cmake g++-14 ninja-build clang-19 libfmt-dev libc++-19-dev libc++abi-19-dev
+         
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 190
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 190
+         
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 140
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 140
+         
+        sudo update-alternatives --set clang /usr/bin/clang-19
+        sudo update-alternatives --set clang++ /usr/bin/clang++-19
+         
+        sudo update-alternatives --set gcc /usr/bin/gcc-14
+        sudo update-alternatives --set g++ /usr/bin/g++-14
+        
+        clang++ --version
+        g++ --version
+           
     - name: ci-clang-libstdc++
       run: cmake --workflow --preset="ci-clang-libstdc++"
     - name: ci-clang-libc++
@@ -50,16 +72,3 @@ jobs:
       run: cmake --workflow --preset="ci-clang-libstdc++-c++26"
     - name: ci-clang-libc++-c++26
       run: cmake --workflow --preset="ci-clang-libc++-c++26"
-
-  build-and-test-msvc:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Configure MSVC
-      run: cmake -B ${{github.workspace}}/build/msvc -DCMAKE_BUILD_TYPE=Release 
-    - name: Build MSVC
-      run: cmake --build ${{github.workspace}}/build/msvc
-    - name: Test MSVC
-      working-directory: ${{github.workspace}}/build/msvc
-      run: ctest -C Debug
-

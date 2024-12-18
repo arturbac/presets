@@ -8,7 +8,8 @@
 #include <system_error>
 #include <vector>
 #include <memory>
-
+#include <span>
+#include <variant>
 
 namespace presets::inline v2
   {
