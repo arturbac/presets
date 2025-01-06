@@ -18,3 +18,6 @@ add_custom_target(copy_presets ALL
 add_ut_test(presets_ut.cc)
 target_compile_definitions( presets_ut PRIVATE BOOST_UT_DISABLE_MODULE)
 add_dependencies(presets_ut copy_presets)
+
+add_ut_test(options_ut.cc)
+target_compile_definitions( options_ut PRIVATE BOOST_UT_DISABLE_MODULE)

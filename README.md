@@ -1,3 +1,4 @@
+![BSL](https://img.shields.io/badge/license-BSL1.0-blue.svg)![C++](https://img.shields.io/badge/C%2B%2B-20%20%7C%2023-blue.svg)
 # Command Line Argument Preset Handling for any application
 
 A modern C++23 library for managing command line arguments through preset configurations, similar to CMake's preset system. This library allows you to define preset argument configurations in JSON format, with support for inheritance and variable interpolation.
@@ -7,17 +8,17 @@ Early in development.
 
 - Define command line argument presets in JSON, similar to CMake presets
 - Inherit and combine argument sets from multiple presets
-- Variable substitution with `${variable}` syntax
+- Variable value substitution with `${variable}` syntax
 - Modern C++23 implementation leveraging ranges and views
 - Fast JSON parsing with glaze
-- Robust error handling using simple_enum's expected type
+- Robust error handling using expected type
 
 ## Requirements
 
-- C++23 compliant compiler (maybe donwgraded if requested to c++20)
+- C++23 compliant compiler (could be downgraded if requested to c++20)
 - CMake 3.25 or higher
 - [glaze](https://github.com/stephenberry/glaze) v4.1.0 for JSON handling
-- [simple_enum](https://github.com/arturbac/simple_enum) v0.8.5 for expected type
+- [simple_enum](https://github.com/arturbac/simple_enum) v0.8.5 for expected type and error_code template
 - Boost.UT for unit testing
 
 
@@ -61,7 +62,7 @@ Here's a practical example using database connection configurations:
   "presets": [
     {
       "name": "prod-db",
-      "description": "Production database connection for ${prod_host}",
+      "description": "Production database connection for ${prod_host} on port ${default_port}",
       "inherits": ["base-connection"],
       "arguments": {
         "host": "${prod_host}",
@@ -73,7 +74,7 @@ Here's a practical example using database connection configurations:
     },
     {
       "name": "dev-db",
-      "description": "Development database connection for ${dev_host}",
+      "description": "Development database connection for ${dev_host} on port ${default_port}",
       "inherits": ["base-connection"],
       "arguments": {
         "host": "${dev_host}",
@@ -89,7 +90,7 @@ Here's a practical example using database connection configurations:
 
 ### Code Example
 
-This exmaple show only presets use and may be comined with Your own command line handling
+This exmaple show only presets use and may be combined with Your own command line handling
 (such example will shortly come for boost::program_options)
 
 ```cpp
@@ -142,7 +143,7 @@ The above example demonstrates:
 
 The preset system supports:
 - Three argument value types: string, double, and boolean
-- Variable interpolation using `${variable}` syntax
+- Variable expanding using `${variable}` syntax
 - Multi-level preset inheritance
 - External configuration file inclusion
 - Hidden presets for creating base configurations
@@ -150,7 +151,7 @@ The preset system supports:
 
 ## Error Handling
 
-The library uses `expected<T, error_info>` from std or if not available from simple_enum for robust error handling, providing detailed information about any failures in loading or processing presets.
+The library uses `expected<T, error_info>`, std::expected is used by default or if not available a one from simple_enum for robust error handling, providing detailed information about any failures in loading or processing presets.
 
 ## Contributing
 

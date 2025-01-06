@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: BSL-1.0
 // SPDX-PackageHomePage: https://github.com/arturbac/presets
 #include <presets/presets.hpp>
+#include <presets/detail/basic_fixed_string.h>
 #include <span>
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
@@ -23,6 +24,7 @@ using ut::le;
 using ut::lt;
 using ut::neq;
 using std::operator""sv;
+
 
 static auto verify_argument(std::span<presets::config_argument const> args, presets::config_argument const expected_arg)
   {

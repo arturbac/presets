@@ -17,19 +17,22 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(BUILD_TESTING "Build tests" ON)
 
 include(cmake/get_cpm.cmake)
-# include(CMakeDependentOption) find_package(vcpkg CONFIG QUIET)
 
-# if(NOT vcpkg_FOUND)
 cpmaddpackage(NAME simple_enum GITHUB_REPOSITORY arturbac/simple_enum GIT_TAG
-              v0.8.5)
+              v0.8.6)
 find_package(simple_enum REQUIRED)
+add_library(simple_enum::simple_enum ALIAS simple_enum )
+
 cpmaddpackage(NAME glaze GITHUB_REPOSITORY stephenberry/glaze GIT_TAG v4.1.0)
 # endif()
 find_package(glaze REQUIRED)
 add_library(presets)
 add_library(presets::presets ALIAS presets)
 
-target_sources(presets PRIVATE src/presets.cc)
+target_sources(presets PRIVATE
+   src/presets.cc
+   src/options.cc
+   )
 
 # Include directories
 target_include_directories(
@@ -57,11 +60,11 @@ install(
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-# install(
-#   EXPORT presetsTargets
-#   FILE presetsTargets.cmake
-#   NAMESPACE presets::
-#   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/presets)
+install(
+  EXPORT presetsTargets
+  FILE presetsTargets.cmake
+  NAMESPACE presets::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/presets)
 
 configure_package_config_file(
   cmake/presetsConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/presetsConfig.cmake

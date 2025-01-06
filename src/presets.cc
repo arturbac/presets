@@ -115,7 +115,7 @@ namespace
     }
 
   [[nodiscard]]
-  auto to_string(std::variant<std::string, double, bool> const & var) noexcept -> std::string
+  auto to_string(std::variant<std::string, double, bool> const & var) -> std::string
     {
     return std::visit(
       []<typename T>(T const & val) -> std::string
@@ -149,18 +149,18 @@ namespace
     std::string_view key,
     glz::json_t const & var,
     preset_t const * current_preset = nullptr
-  ) noexcept -> expected_ec<std::variant<std::string, double, bool>>
+  ) -> expected_ec<std::variant<std::string, double, bool>>
     {
     if(var.is_string())
       {
       std::string value{var.get_string()};
-      do
+      for(; true;)
         {
         auto varref{find_var_placeholder(value)};
         if(not varref) [[unlikely]]
           return unexpected{varref.error()};
 
-        std::optional<variable_info> info{std::move(*varref)};
+        std::optional<variable_info> info{*varref};
         if(not info) [[likely]]
           break;
 
@@ -177,16 +177,17 @@ namespace
           if(not replacment) [[unlikely]]
             return make_unexpected_error(
               undefined_variable_reference,
-              "referenced variable `{}` from `{}` while processing file {} is undefiend",
+              "referenced variable `{}` at ket `{}` from `{}` while processing file {} is undefiend",
               info->name,
+              key,
               value,
               preset_file_name
             );
           }
         else
           replacment = to_string(it->second.value);
-        value.replace(info->pos, info->name.size() + 3, std::move(*replacment));
-        } while(true);
+        value.replace(info->pos, info->name.size() + 3, *replacment);
+        }
 
       return value;
       }
@@ -225,20 +226,20 @@ namespace
       {
       ctx_t::include_map::iterator it;
         {
-        std::filesystem::path include_path{ctx.base_directory / include_name};
+        std::filesystem::path const include_path{ctx.base_directory / include_name};
         if(not std::filesystem::exists(include_path)) [[unlikely]]
           return make_unexpected_error(
             cannot_load_file, "included file `{}` from `{}` does not exists ", include_path.string(), preset_file_name
           );
 
-        std::string file_name{include_path.string()};
+        std::string const file_name{include_path.string()};
         if(ctx.include.contains(file_name)) [[unlikely]]
           return make_unexpected_error(
             circular_inclusion, "included file `{}` from file `{}` was already included ", file_name, preset_file_name
           );
 
         raw_preset_file_t included_preset{};
-        glz::error_ctx res{glz::read_file_json(included_preset, file_name, std::string{})};
+        glz::error_ctx const res{glz::read_file_json(included_preset, file_name, std::string{})};
         if(res) [[unlikely]]
           return make_unexpected_error(res.ec, "error parsing file `{}` at char {}", preset_file_name, res.location);
 
@@ -246,7 +247,7 @@ namespace
         }
         {
         raw_preset_file_t const & included_preset{it->second};
-        std::string_view preset_file_name{it->first};
+        std::string_view const preset_file_name{it->first};
         if(auto res{process_preset_file(ctx, preset_file_name, included_preset)}; not res) [[unlikely]]
           return unexpected{res.error()};
         }
@@ -303,6 +304,7 @@ namespace
   }  // namespace
 
 auto read_presets(std::string_view preset_file_path) noexcept -> expected_ec<presets>
+try
   {
   if(not std::filesystem::exists(preset_file_path)) [[unlikely]]
     return make_unexpected_error(cannot_load_file);
@@ -316,7 +318,7 @@ auto read_presets(std::string_view preset_file_path) noexcept -> expected_ec<pre
     std::string file_name{ctx.base_directory.filename()};
     ctx.base_directory.remove_filename();
 
-    glz::error_ctx res{glz::read_file_json(main_presets, preset_file_path, std::string{})};
+    glz::error_ctx const res{glz::read_file_json(main_presets, preset_file_path, std::string{})};
     if(res) [[unlikely]]
       return make_unexpected_error(res.ec, "error parsing file `{}` at char {}", file_name, res.location);
     if(main_presets.version != expected_version) [[unlikely]]
@@ -325,7 +327,7 @@ auto read_presets(std::string_view preset_file_path) noexcept -> expected_ec<pre
     }
     {
     raw_preset_file_t const & main_file{it->second};
-    std::string_view preset_file_name{it->first};
+    std::string_view const preset_file_name{it->first};
     if(auto res{process_preset_file(ctx, preset_file_name, main_file)}; not res) [[unlikely]]
       return unexpected{res.error()};
     }
@@ -338,6 +340,10 @@ auto read_presets(std::string_view preset_file_path) noexcept -> expected_ec<pre
   );
   data->presets = std::move(ctx.presets);
   return presets{std::move(data)};
+  }
+catch(...)
+  {
+  return make_unexpected_error(internal_error);
   }
 
 presets::presets(std::unique_ptr<data> && data) noexcept : data_{std::move(data)} {}

@@ -29,7 +29,7 @@
       "generator": "Ninja",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_CXX_COMPILER": "/opt/llvm/20/bin/clang++-20",
         "SIMPLE_ENUM_OPT_IN_STATIC_ASSERTS": "ON"
       }
     },
@@ -38,7 +38,7 @@
       "generator": "Ninja",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "g++"
+        "CMAKE_CXX_COMPILER": "g++-14"
       }
     },
     {

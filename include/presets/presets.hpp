@@ -2,10 +2,8 @@
 // SPDX-License-Identifier: BSL-1.0
 // SPDX-PackageHomePage: https://github.com/arturbac/presets
 #pragma once
-#include <string>
-#include <string_view>
-#include <simple_enum/expected.h>
-#include <system_error>
+
+#include <presets/error_info.hpp>
 #include <vector>
 #include <memory>
 #include <span>
@@ -13,13 +11,6 @@
 
 namespace presets::inline v2
   {
-struct error_info
-{
-  std::error_code ec;
-  std::string info;
-};
-template<typename T>
-using expected_ec = cxx23::expected<T, error_info>;
 
 struct config_argument
   {

@@ -17,6 +17,7 @@ enum struct error_code
   invalid_preset_version,
   invalid_config,
   invalid_variable_reference,
+  invalid_option,
   undefined_variable_reference,
   undefined_inherited_preset,
   circular_inclusion,
@@ -25,14 +26,15 @@ enum struct error_code
   variable_redeclaration,
   preset_redefinition,
   empty_data,
-  invalid_preset_name
+  invalid_preset_name,
+  internal_error
   };
 constexpr int expected_version = 2;
 
 consteval auto adl_enum_bounds(error_code)
   {
   using enum error_code;
-  return simple_enum::adl_info{cannot_load_file, invalid_preset_name, true};
+  return simple_enum::adl_info{cannot_load_file, internal_error, true};
   }
 
 template<simple_enum::concepts::error_enum en, typename... Args>
